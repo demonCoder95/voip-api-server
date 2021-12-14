@@ -31,7 +31,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDR'
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.cdr_controller
 components:
   schemas:
     CDR:
