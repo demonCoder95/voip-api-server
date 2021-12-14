@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Data Analytics API
+  description: Data Analytics API specification developed in-house at xFlow Research.
+  version: 0.1.0
+
+servers:
+  - url: /v1alpha1
+    description: Version 1 alpha version 1 for the Data Analytics API.
+
+paths:
+  /calls/{cdrId}:
+    get:
+      summary: Return a list of Call Data Records (CDRs).
+      description: This endpoint is currently being used for getting the CDR for
+        a specific call, by providing the CDR-ID as '/calls/{cdr-id}'.
+      parameters:
+        - name: cdrId
+          in: path
+          required: true
+          description: The CDR-ID of the call for which to retrieve the CDR.
+          schema:
+            type: integer
+            # The DB schema lists ID in CDR table as BIGINT which is 64 bits.
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A valid Call Data Record entry from the Database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CDR'
+                  
+components:
+  schemas:
+  # The schema of the Call Data Record that will be retrieved - this is in
+  # according to the API Guide document.
+    CDR:
+      type: object
+      properties:
+        cdrId:
+          description: The CDR ID of the retrieved CDR.
+          type: string
+          example: '40122'
+        caller:
+          description: The MSISDN of the Caller from SIP 'From' header
+          type: string
+          example: '4179383431512'
+        called:
+          description: The MSISDN of the Callee from SIP 'To' header
+          type: string
+          example: '4179383431512'
+        calldate:
+          description: Start date and time of call in ISO 8601 format, with the
+            configured timezone. It will be the time since the first SIP INVITE
+            packet.
+          type: string
+          example: 2019-01-28T15:19:45+0400
+        callend:
+          description: End date and time of call in ISO 8601 format, with the
+            configured timezone. It will be the time of the last received packet.
+          type: string
+          example: 2019-01-28T15:20:00+0400
+        callId:
+          description: Call ID of the CDR in the database.
+          type: string
+          example: sshcbKlTL@10.231.96.147
+        duration:
+          description: Total duration of the call. (The interval between
+            'callend' - 'calldate' as number of seconds)
+          type: string
+          example: '14'
+        connection_duration:
+          description: Number of seconds the call was connected (seconds between
+            SIP 200 OK and callend). Value will be 'null' if no SIP 200 OK packet
+            is sent by the callee. Value will be '0' if SIP 200 OK is sent by the
+            callee but no RTP packets were exchanged.
+          type: string
+          example: null
+        sipcallerip:
+          description: IP address of the SIP caller.
+          type: string
+          example: '10.238.249.55'
+        sipcallerport:
+          description: Port number of the SIP caller.
+          type: string
+          example: '44410'
+        sipcalledip:
+          description: IP address of the SIP callee.
+          type: string
+          example: '10.238.235.248'
+        sipcalledport:
+          description: Port number of the SIP callee.
+          type: string
+          example: '5060'
+        codec_a:
+          description: CODEC of the caller for RTP stream.
+          type: string
+          example: AMR-WB
+        codec_b:
+          description: CODEC of the callee for RTP stream.
+          type: string
+          example: AMR-WB
+        a_last_rtp_from_end:
+          description: Last RTP packet arrival time for caller (in seconds) before
+            the call was closed.
+          type: string
+          example: '55'
+        b_last_rtp_from_end:
+          description: Last RTP packet arrival time for callee (in seconds) before
+            the call was closed.
+          type: string
+          example: '10'
+        Cell_ID_Caller:
+          description: Cell ID of the caller.
+          type: string
+          example: 42402A4800392F08
+        Cell_ID_Called:
+          description: Cell ID of the callee.
+          type: string
+          example: 42402a49403aa802
+        IMSI-Contact:
+          description: IMSI of the caller/callee from the Contact URI User Part
+            parameter.
+          type: string
+          example: XXXXXXXXXXXXXXX
+        IMSI-Request:
+          description: IMSI of the caller/callee from the Request URI User Part
+            parameter.
+          type: string
+          example: XXXXXXXXXXXXXXX
+        Session-ID:
+          description: Session-ID of the call
+          type: string
+          example: XXXXXXXXXXXXXXX

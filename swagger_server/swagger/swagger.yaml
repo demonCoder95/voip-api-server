@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Data Analytics API
+  description: Data Analytics API specification developed in-house at xFlow Research.
+  version: 0.1.0
+servers:
+- url: /v1alpha1
+  description: Version 1 alpha version 1 for the Data Analytics API.
+paths:
+  /calls/{cdrId}:
+    get:
+      summary: Return a list of Call Data Records (CDRs).
+      description: "This endpoint is currently being used for getting the CDR for\
+        \ a specific call, by providing the CDR-ID as '/calls/{cdr-id}'."
+      operationId: calls_cdr_id_get
+      parameters:
+      - name: cdrId
+        in: path
+        description: The CDR-ID of the call for which to retrieve the CDR.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          minimum: 1
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: A valid Call Data Record entry from the Database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CDR'
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+components:
+  schemas:
+    CDR:
+      type: object
+      properties:
+        cdrId:
+          type: string
+          description: The CDR ID of the retrieved CDR.
+          example: "40122"
+        caller:
+          type: string
+          description: The MSISDN of the Caller from SIP 'From' header
+          example: "4179383431512"
+        called:
+          type: string
+          description: The MSISDN of the Callee from SIP 'To' header
+          example: "4179383431512"
+        calldate:
+          type: string
+          description: "Start date and time of call in ISO 8601 format, with the configured\
+            \ timezone. It will be the time since the first SIP INVITE packet."
+          example: 2019-01-28T15:19:45+0400
+        callend:
+          type: string
+          description: "End date and time of call in ISO 8601 format, with the configured\
+            \ timezone. It will be the time of the last received packet."
+          example: 2019-01-28T15:20:00+0400
+        callId:
+          type: string
+          description: Call ID of the CDR in the database.
+          example: sshcbKlTL@10.231.96.147
+        duration:
+          type: string
+          description: Total duration of the call. (The interval between 'callend'
+            - 'calldate' as number of seconds)
+          example: "14"
+        connection_duration:
+          type: string
+          description: Number of seconds the call was connected (seconds between SIP
+            200 OK and callend). Value will be 'null' if no SIP 200 OK packet is sent
+            by the callee. Value will be '0' if SIP 200 OK is sent by the callee but
+            no RTP packets were exchanged.
+        sipcallerip:
+          type: string
+          description: IP address of the SIP caller.
+          example: 10.238.249.55
+        sipcallerport:
+          type: string
+          description: Port number of the SIP caller.
+          example: "44410"
+        sipcalledip:
+          type: string
+          description: IP address of the SIP callee.
+          example: 10.238.235.248
+        sipcalledport:
+          type: string
+          description: Port number of the SIP callee.
+          example: "5060"
+        codec_a:
+          type: string
+          description: CODEC of the caller for RTP stream.
+          example: AMR-WB
+        codec_b:
+          type: string
+          description: CODEC of the callee for RTP stream.
+          example: AMR-WB
+        a_last_rtp_from_end:
+          type: string
+          description: Last RTP packet arrival time for caller (in seconds) before
+            the call was closed.
+          example: "55"
+        b_last_rtp_from_end:
+          type: string
+          description: Last RTP packet arrival time for callee (in seconds) before
+            the call was closed.
+          example: "10"
+        Cell_ID_Caller:
+          type: string
+          description: Cell ID of the caller.
+          example: 42402A4800392F08
+        Cell_ID_Called:
+          type: string
+          description: Cell ID of the callee.
+          example: 42402a49403aa802
+        IMSI-Contact:
+          type: string
+          description: IMSI of the caller/callee from the Contact URI User Part parameter.
+          example: XXXXXXXXXXXXXXX
+        IMSI-Request:
+          type: string
+          description: IMSI of the caller/callee from the Request URI User Part parameter.
+          example: XXXXXXXXXXXXXXX
+        Session-ID:
+          type: string
+          description: Session-ID of the call
+          example: XXXXXXXXXXXXXXX
+      example:
+        callId: sshcbKlTL@10.231.96.147
+        called: "4179383431512"
+        IMSI-Contact: XXXXXXXXXXXXXXX
+        sipcallerip: 10.238.249.55
+        Cell_ID_Called: 42402a49403aa802
+        a_last_rtp_from_end: "55"
+        Session-ID: XXXXXXXXXXXXXXX
+        cdrId: "40122"
+        callend: 2019-01-28T15:20:00+0400
+        duration: "14"
+        calldate: 2019-01-28T15:19:45+0400
+        b_last_rtp_from_end: "10"
+        caller: "4179383431512"
+        sipcalledport: "5060"
+        sipcallerport: "44410"
+        connection_duration: connection_duration
+        sipcalledip: 10.238.235.248
+        codec_b: AMR-WB
+        codec_a: AMR-WB
+        IMSI-Request: XXXXXXXXXXXXXXX
+        Cell_ID_Caller: 42402A4800392F08
+
