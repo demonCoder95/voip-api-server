@@ -2,13 +2,43 @@ openapi: 3.0.0
 info:
   title: Data Analytics API
   description: Data Analytics API specification developed in-house at xFlow Research.
-  version: 0.1.0
+  version: 0.2.0
 
 servers:
-  - url: /v1alpha1
-    description: Version 1 alpha version 1 for the Data Analytics API.
+  - url: /v1alpha2
+    description: Version 1 alpha version 2 for the Data Analytics API.
 
 paths:
+  /calls:
+    get:
+      summary: Return a list of Call Data Records (CDRs).
+      description: This endpoint will be used to retrieve CDR list using
+        'offset' and 'size' parameters. The CDR list will always have less
+        than or equal to 'size' number of entries.
+      parameters:
+        - name: offset
+          in: query
+          required: true
+          description: The CDR-ID offset to use for retrieving CDRs.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+        - name: size
+          in: query
+          required: true
+          description: The maximum number of CDRs to retrieve.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A valid list of Call Data Records from the Database.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CDRList'
   /calls/{cdrId}:
     get:
       summary: Return a list of Call Data Records (CDRs).
@@ -34,6 +64,16 @@ paths:
                   
 components:
   schemas:
+  # A wrapper object with only one property 'cdr' as per API guide.
+    CDRList:
+      type: object
+      properties:
+        cdr:
+          description: A list of CDR entries.
+          type: array
+          items:
+            $ref: '#/components/schemas/CDR'
+
   # The schema of the Call Data Record that will be retrieved - this is in
   # according to the API Guide document.
     CDR:

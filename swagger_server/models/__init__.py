@@ -4,3 +4,4 @@
 from __future__ import absolute_import
 # import models into model package
 from swagger_server.models.cdr import CDR
+from swagger_server.models.cdr_list import CDRList
