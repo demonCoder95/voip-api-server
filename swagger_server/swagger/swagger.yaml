@@ -68,7 +68,7 @@ components:
           description: Total duration of the call. (The interval between 'callend'
             - 'calldate' as number of seconds)
           example: "14"
-        connection_duration:
+        connect_duration:
           type: string
           description: Number of seconds the call was connected (seconds between SIP
             200 OK and callend). Value will be 'null' if no SIP 200 OK packet is sent
@@ -143,8 +143,8 @@ components:
         b_last_rtp_from_end: "10"
         caller: "4179383431512"
         sipcalledport: "5060"
+        connect_duration: connect_duration
         sipcallerport: "44410"
-        connection_duration: connection_duration
         sipcalledip: 10.238.235.248
         codec_b: AMR-WB
         codec_a: AMR-WB

@@ -71,7 +71,7 @@ components:
             'callend' - 'calldate' as number of seconds)
           type: string
           example: '14'
-        connection_duration:
+        connect_duration:
           description: Number of seconds the call was connected (seconds between
             SIP 200 OK and callend). Value will be 'null' if no SIP 200 OK packet
             is sent by the callee. Value will be '0' if SIP 200 OK is sent by the

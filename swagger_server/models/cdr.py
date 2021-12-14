@@ -14,7 +14,7 @@ class CDR(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, cdr_id: str=None, caller: str=None, called: str=None, calldate: str=None, callend: str=None, call_id: str=None, duration: str=None, connection_duration: str=None, sipcallerip: str=None, sipcallerport: str=None, sipcalledip: str=None, sipcalledport: str=None, codec_a: str=None, codec_b: str=None, a_last_rtp_from_end: str=None, b_last_rtp_from_end: str=None, cell_id_caller: str=None, cell_id_called: str=None, imsi_contact: str=None, imsi_request: str=None, session_id: str=None):  # noqa: E501
+    def __init__(self, cdr_id: str=None, caller: str=None, called: str=None, calldate: str=None, callend: str=None, call_id: str=None, duration: str=None, connect_duration: str=None, sipcallerip: str=None, sipcallerport: str=None, sipcalledip: str=None, sipcalledport: str=None, codec_a: str=None, codec_b: str=None, a_last_rtp_from_end: str=None, b_last_rtp_from_end: str=None, cell_id_caller: str=None, cell_id_called: str=None, imsi_contact: str=None, imsi_request: str=None, session_id: str=None):  # noqa: E501
         """CDR - a model defined in Swagger
 
         :param cdr_id: The cdr_id of this CDR.  # noqa: E501
@@ -31,8 +31,8 @@ class CDR(Model):
         :type call_id: str
         :param duration: The duration of this CDR.  # noqa: E501
         :type duration: str
-        :param connection_duration: The connection_duration of this CDR.  # noqa: E501
-        :type connection_duration: str
+        :param connect_duration: The connect_duration of this CDR.  # noqa: E501
+        :type connect_duration: str
         :param sipcallerip: The sipcallerip of this CDR.  # noqa: E501
         :type sipcallerip: str
         :param sipcallerport: The sipcallerport of this CDR.  # noqa: E501
@@ -68,7 +68,7 @@ class CDR(Model):
             'callend': str,
             'call_id': str,
             'duration': str,
-            'connection_duration': str,
+            'connect_duration': str,
             'sipcallerip': str,
             'sipcallerport': str,
             'sipcalledip': str,
@@ -92,7 +92,7 @@ class CDR(Model):
             'callend': 'callend',
             'call_id': 'callId',
             'duration': 'duration',
-            'connection_duration': 'connection_duration',
+            'connect_duration': 'connect_duration',
             'sipcallerip': 'sipcallerip',
             'sipcallerport': 'sipcallerport',
             'sipcalledip': 'sipcalledip',
@@ -114,7 +114,7 @@ class CDR(Model):
         self._callend = callend
         self._call_id = call_id
         self._duration = duration
-        self._connection_duration = connection_duration
+        self._connect_duration = connect_duration
         self._sipcallerip = sipcallerip
         self._sipcallerport = sipcallerport
         self._sipcalledip = sipcalledip
@@ -302,27 +302,27 @@ class CDR(Model):
         self._duration = duration
 
     @property
-    def connection_duration(self) -> str:
-        """Gets the connection_duration of this CDR.
+    def connect_duration(self) -> str:
+        """Gets the connect_duration of this CDR.
 
         Number of seconds the call was connected (seconds between SIP 200 OK and callend). Value will be 'null' if no SIP 200 OK packet is sent by the callee. Value will be '0' if SIP 200 OK is sent by the callee but no RTP packets were exchanged.  # noqa: E501
 
-        :return: The connection_duration of this CDR.
+        :return: The connect_duration of this CDR.
         :rtype: str
         """
-        return self._connection_duration
+        return self._connect_duration
 
-    @connection_duration.setter
-    def connection_duration(self, connection_duration: str):
-        """Sets the connection_duration of this CDR.
+    @connect_duration.setter
+    def connect_duration(self, connect_duration: str):
+        """Sets the connect_duration of this CDR.
 
         Number of seconds the call was connected (seconds between SIP 200 OK and callend). Value will be 'null' if no SIP 200 OK packet is sent by the callee. Value will be '0' if SIP 200 OK is sent by the callee but no RTP packets were exchanged.  # noqa: E501
 
-        :param connection_duration: The connection_duration of this CDR.
-        :type connection_duration: str
+        :param connect_duration: The connect_duration of this CDR.
+        :type connect_duration: str
         """
 
-        self._connection_duration = connection_duration
+        self._connect_duration = connect_duration
 
     @property
     def sipcallerip(self) -> str:
