@@ -31,6 +31,16 @@ cdr_table_schema = ("caller, called, calldate, callend, duration, "
 # 'cdr_next' table schema to control the output formatting
 cdr_next_table_schema = ("fbasename")
 
+# 'cdr_next_1' table schema to control the output formatting
+# TODO: Add custom_header_* field information in the config of the controller.
+# The current mapping is:
+# custom_header_1 => IMSI-Contact
+# custom_header_2 => IMSI-Request
+# custom_header_3 => Cell_ID_Caller
+# custom_header_4 => Cell_ID_Called
+# custom_header_5 => Session-ID
+cdr_next_1_table_schema = ("custom_header_1, custom_header_2, "
+    "custom_header_3, custom_header_4, custom_header_5")
 
 # put in the DB connection functionality here for reuse
 def db_handle_init():
@@ -39,11 +49,11 @@ def db_handle_init():
 def db_handle_process_query():
     pass
 
-def create_cdr_object(cdr_id, resp_cdr, resp_cdr_next):
+def create_cdr_object(cdr_id, resp_cdr, resp_cdr_next, resp_cdr_next_1):
     return_cdr = CDR()
 
     # handle the case of missing CDR
-    if resp_cdr is None or resp_cdr_next is None:
+    if resp_cdr is None:
         return return_cdr
 
     # populate an individual CDR otherwise
@@ -63,7 +73,26 @@ def create_cdr_object(cdr_id, resp_cdr, resp_cdr_next):
     return_cdr.a_last_rtp_from_end = str(resp_cdr[12])
     return_cdr.b_last_rtp_from_end = str(resp_cdr[13])
 
-    return_cdr.call_id = resp_cdr_next[0]
+    if resp_cdr_next is not None:
+        return_cdr.call_id = resp_cdr_next[0]
+    else:
+        return_cdr.call_id = ""
+
+    # The current mapping is:
+    # custom_header_1 => IMSI-Contact
+    # custom_header_2 => IMSI-Request
+    # custom_header_3 => Cell_ID_Caller
+    # custom_header_4 => Cell_ID_Called
+    # custom_header_5 => Session-ID
+    # handle the case of missing entry in 'cdr_next_1' table
+    if resp_cdr_next_1 is None:
+        resp_cdr_next_1 = ("", "", "", "", "")
+        
+    return_cdr.imsi_contact = str(resp_cdr_next_1[0])
+    return_cdr.imsi_request = str(resp_cdr_next_1[1])
+    return_cdr.cell_id_caller = str(resp_cdr_next_1[2])
+    return_cdr.cell_id_called = str(resp_cdr_next_1[3])
+    return_cdr.session_id = str(resp_cdr_next_1[4])
 
     return return_cdr
 
@@ -98,7 +127,12 @@ def calls_cdr_id_get(cdr_id):  # noqa: E501
     db_query_cdr_next = (
         f"SELECT {cdr_next_table_schema} FROM cdr_next WHERE cdr_ID={cdr_id}"
     )
-    
+    db_query_cdr_next_1 = (
+        f"SELECT {cdr_next_1_table_schema} FROM cdr_next_1 WHERE cdr_ID={cdr_id}"
+    )
+
+    # this function call is always used to fetch one CDR entry from the
+    # database, therefore, fetchone() is used for all queries.
     db_cur.execute(db_query_cdr)
     resp_cdr = db_cur.fetchone()
     print(resp_cdr)
@@ -107,11 +141,15 @@ def calls_cdr_id_get(cdr_id):  # noqa: E501
     resp_cdr_next = db_cur.fetchone()
     print(resp_cdr_next)
 
+    db_cur.execute(db_query_cdr_next_1)
+    resp_cdr_next_1 = db_cur.fetchone()
+    print(resp_cdr_next_1)
+
     # all done, so close the cursor and connection with the database
     db_cur.close()
     db_conn.close()
 
-    return create_cdr_object(cdr_id, resp_cdr, resp_cdr_next)
+    return create_cdr_object(cdr_id, resp_cdr, resp_cdr_next, resp_cdr_next_1)
 
 def calls_get(offset, size):
     """Return a list of Call Data Records (CDRs).
