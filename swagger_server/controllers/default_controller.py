@@ -32,3 +32,18 @@ def calls_get(offset, size):  # noqa: E501
     :rtype: CDRList
     """
     return 'do some magic!'
+
+
+def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
+    """Return a PCAP of a call
+
+    This endpoint returns the Packet Capture (PCAP) of a call identified by the given CDR-ID. It contains both SIP and RTP by default. It accepts a flag &#x27;disable_rtp&#x27; to provide only SIP in the PCAP. # noqa: E501
+
+    :param cdr_id: The CDR-ID of the call for which to retrieve the PCAP.
+    :type cdr_id: int
+    :param disable_rtp: The flag to disable RTP component in the PCAP of the call.
+    :type disable_rtp: int
+
+    :rtype: object
+    """
+    return 'do some magic!'

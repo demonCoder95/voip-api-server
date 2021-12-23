@@ -2,11 +2,11 @@ openapi: 3.0.0
 info:
   title: Data Analytics API
   description: Data Analytics API specification developed in-house at xFlow Research.
-  version: 0.2.0
+  version: 0.3.0
 
 servers:
-  - url: /v1alpha2
-    description: Version 1 alpha version 2 for the Data Analytics API.
+  - url: /v1alpha3
+    description: Version 1 alpha version 3 for the Data Analytics API.
 
 paths:
   /calls:
@@ -61,6 +61,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDR'
+  /pcap:
+    get:
+      summary: Return a PCAP of a call
+      description: This endpoint returns the Packet Capture (PCAP) of a call
+        identified by the given CDR-ID. It contains both SIP and RTP by
+        default. It accepts a flag 'disable_rtp' to provide only SIP in the
+        PCAP.
+      parameters:
+        - name: cdrId
+          in: query
+          required: true
+          description: The CDR-ID of the call for which to retrieve the PCAP.
+          schema:
+            type: integer
+            minimum: 1
+        - name: disable_rtp
+          in: query
+          required: false
+          description: The flag to disable RTP component in the PCAP of the
+            call.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1
+      responses:
+        '200':
+          description: A call was found in the database successfully and PCAP
+            is being returned.
+          headers:
+            Content-Disposition:
+              description: The header to provide the filename of the PCAP as
+                the Call-ID of the Call.
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+                format: binary
                   
 components:
   schemas:

@@ -2,10 +2,10 @@ openapi: 3.0.0
 info:
   title: Data Analytics API
   description: Data Analytics API specification developed in-house at xFlow Research.
-  version: 0.2.0
+  version: 0.3.0
 servers:
-- url: /v1alpha2
-  description: Version 1 alpha version 2 for the Data Analytics API.
+- url: /v1alpha3
+  description: Version 1 alpha version 3 for the Data Analytics API.
 paths:
   /calls:
     get:
@@ -68,6 +68,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/CDR'
       x-openapi-router-controller: swagger_server.controllers.cdr_controller
+  /pcap:
+    get:
+      summary: Return a PCAP of a call
+      description: This endpoint returns the Packet Capture (PCAP) of a call identified
+        by the given CDR-ID. It contains both SIP and RTP by default. It accepts a
+        flag 'disable_rtp' to provide only SIP in the PCAP.
+      operationId: pcap_get
+      parameters:
+      - name: cdrId
+        in: query
+        description: The CDR-ID of the call for which to retrieve the PCAP.
+        required: true
+        style: form
+        explode: true
+        schema:
+          minimum: 1
+          type: integer
+      - name: disable_rtp
+        in: query
+        description: The flag to disable RTP component in the PCAP of the call.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 1
+          minimum: 1
+          type: integer
+      responses:
+        "200":
+          description: A call was found in the database successfully and PCAP is being
+            returned.
+          headers:
+            Content-Disposition:
+              description: The header to provide the filename of the PCAP as the Call-ID
+                of the Call.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+                format: binary
+                x-content-type: application/octet-stream
+      x-openapi-router-controller: swagger_server.controllers.pcap_controller
 components:
   schemas:
     CDRList:
