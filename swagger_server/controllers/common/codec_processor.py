@@ -5,8 +5,24 @@ Author: Noor
 Date: December 28, 2021
 License: None"""
 import g711
+import logging
 import wave
 
+# Create a module logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# Create a file handler for the logger
+file_handler = logging.FileHandler('logs/' + __name__ + '.log')
+formatter = logging.Formatter(
+    '%(asctime)s : %(levelname)s : %(name)s : %(message)s'
+)
+file_handler.setFormatter(formatter)
+
+# Add the handler to the logger
+logger.addHandler(file_handler)
+
+# A sample G.711 encoded payload
 g711u_payload = b"\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff" \
 b"\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff" \
 b"\x7f\xff\xff\x7f\xff\x7f\x7f\xff\xff\x7f\x7f\xff\x7f\xff\xff\xff" \
@@ -18,22 +34,30 @@ b"\xfd\xfb\xf8\xf5\xf4\xf1\xf0\xf1\xf0\xf2\xf5\xf7\xfb\xff\x7a\x76" \
 b"\x71\x6e\x6d\x6b\x6b\x6b\x6b\x6c\x6e\x70\x75\x7c\xf9\xf2\xeb\xe8" \
 b"\xe3\xdf\xde\xdb\xe3\xdf\xe4\x7e\xf4\x6f\x62\x66\x5e\x5e\x5f\x60"
 
-
 class G711UProcessor():
     """
+    This class implements the ITU-T G.711 CODEC processor. It is a wrapper
+    written on top of the 3rd party module 'g711'.
+
     The 'decode' function returns the raw audio bytes that have been
-    decoded from the ITU-T G.711 u-Law CODEC encoding.
+    decoded from the ITU-T G.711 u-Law encoding.
     """
     def __init__(self, payload):
+        """The class constructor."""
         self.payload = payload
 
     def decode(self):
         # decode the encoded u-Law bytes
+        logger.debug(f'Received {len(self.payload)} bytes of G.711 u-Law payload!')
         decoded_bytes = g711.decode_ulaw(self.payload)
+        logger.debug(f'Decoded {len(decoded_bytes)} bytes of G.711 u-Law payload!')
         return decoded_bytes
 
 class G711AProcessor():
     """
+    This class implements the ITU-T G.711 CODEC processor. It is a wrapper
+    written on top of the 3rd party module 'g711'.
+
     The 'decode' function returns the raw audio bytes that have been
     decoded from the ITU-T G.711 a-Law CODEC encoding.
     """
@@ -42,7 +66,9 @@ class G711AProcessor():
 
     def decode(self):
         # decode the encoded a-Law bytes
+        logger.debug(f'Received {len(self.payload)} bytes of G.711 a-Law payload!')
         decoded_bytes = g711.decode_alaw(self.payload)
+        logger.debug(f'Decoded {len(decoded_bytes)} bytes of G.711 a-Law payload!')
         return decoded_bytes
 
 def test_function():
@@ -54,9 +80,12 @@ def test_function():
     with wave.open('test.wav', 'wb') as f:
         f.setframerate(8000)
         f.setnchannels(1)
-        f.setsampwidth(1)
+        f.setsampwidth(4)
         f.writeframes(res)
-    
-    print(res)
 
-# test_function()
+
+# If run as a script, run the test function
+if __name__ == '__main__':
+    test_function()
+
+# Otherwise, do nothing.

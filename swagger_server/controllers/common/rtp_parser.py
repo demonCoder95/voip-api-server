@@ -305,13 +305,13 @@ class RTPParser():
             return None, rtp_header
 
 # test driving function
-def test_class():
+def test_function():
     rtp_parser = RTPParser(rtp_packet)
 
     rtp_payload, rtp_header = rtp_parser.parse()
     
 # If run as a script, run the test function
 if __name__ == '__main__':
-    test_class()
+    test_function()
 
 # If included as a module, nothing will run
