@@ -65,3 +65,13 @@ target/
 
 # PCAP directory to be used as a buffer for uploading requested PCAPs
 pcap/
+# Other pcaps being used for testing
+*.pcap
+
+# Test created audio
+*.wav
+
+# Virtualenv files
+pyvenv.cfg
+bin/
+share/

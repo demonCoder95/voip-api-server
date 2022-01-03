@@ -2,8 +2,6 @@
 from flask import Response
 import paramiko
 import mysql.connector
-from paramiko.client import SSHClient
-from paramiko.sftp_client import SFTPClient
 
 def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
     """Return a PCAP with SIP and RTP of call given CDR ID.

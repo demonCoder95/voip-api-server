@@ -1,15 +1,14 @@
 from typing import List
-import connexion
-import six
 
 from swagger_server.models.cdr import CDR  # noqa: E501
 from swagger_server.models.cdr_list import CDRList
-from swagger_server import util
 
 #imports for the MySQL connector
 import mysql.connector
 
-# CODEC conversion dictionary
+# CODEC conversion dictionary - These numbers are from the RFC 3551
+# which lists the supported CODECs that are valid for being RTP
+# payloads - See Section 6 of RFC 3551
 codec_lookup = {
     0: "PCMU",
     4: "G723",
