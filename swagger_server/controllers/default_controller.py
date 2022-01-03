@@ -6,6 +6,19 @@ from swagger_server.models.cdr_list import CDRList  # noqa: E501
 from swagger_server import util
 
 
+def audio_cdr_id_get(cdr_id):  # noqa: E501
+    """Return the Audio file of a call identified with cdrId
+
+    This API endpoint identifies a call with the given cdrId and then provides the audio file of the decoded audio of the VoIP call in WAV format. # noqa: E501
+
+    :param cdr_id: CDR-ID of the call to identify it.
+    :type cdr_id: int
+
+    :rtype: object
+    """
+    return 'do some magic!'
+
+
 def calls_cdr_id_get(cdr_id):  # noqa: E501
     """Return a list of Call Data Records (CDRs).
 

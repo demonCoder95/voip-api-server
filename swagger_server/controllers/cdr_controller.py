@@ -6,20 +6,10 @@ from swagger_server.models.cdr_list import CDRList
 #imports for the MySQL connector
 import mysql.connector
 
-# CODEC conversion dictionary - These numbers are from the RFC 3551
-# which lists the supported CODECs that are valid for being RTP
-# payloads - See Section 6 of RFC 3551
-codec_lookup = {
-    0: "PCMU",
-    4: "G723",
-    8: "PCMA",
-    9: "G722",
-    320: "AMR",
-    321: "AMR-WB",
-    18: "G729",
-    400: "Telephone-event",
-    None: ""
-}
+# The CODEC lookup dictionary to convert Payload Type (PT) into
+# Payload name string.
+from swagger_server.controllers.common.rtp_parser import codec_lookup
+
 
 # 'cdr' table schema to control the output formatting
 cdr_table_schema = ("caller, called, calldate, callend, duration, "

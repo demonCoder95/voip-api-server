@@ -2,11 +2,11 @@ openapi: 3.0.0
 info:
   title: Data Analytics API
   description: Data Analytics API specification developed in-house at xFlow Research.
-  version: 0.3.0
+  version: 0.4.0
 
 servers:
-  - url: /v1alpha3
-    description: Version 1 alpha version 3 for the Data Analytics API.
+  - url: /v1alpha4
+    description: Version 1 alpha version 4 for the Data Analytics API.
 
 paths:
   /calls:
@@ -100,7 +100,37 @@ paths:
               schema:
                 type: object
                 format: binary
-                  
+  /audio/{cdrId}:
+    get:
+      summary: Return the Audio file of a call identified with cdrId
+      description: This API endpoint identifies a call with the given 
+        cdrId and then provides the audio file of the decoded audio of
+        the VoIP call in WAV format.
+      parameters:
+        - name: cdrId
+          in: path
+          required: true
+          description: CDR-ID of the call to identify it.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A call with was identified with the given CDR-ID and
+            the decoded payload of the call is being returned to the caller.
+          headers:
+            Content-Disposition:
+              description: The filename of the audio file that is being returned.
+              schema:
+                type: string
+          content:
+            audio/x-wav:
+              schema:
+                type: object
+                format: binary
+
+
 components:
   schemas:
   # A wrapper object with only one property 'cdr' as per API guide.

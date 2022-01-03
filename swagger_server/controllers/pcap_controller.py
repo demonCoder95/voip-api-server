@@ -3,6 +3,16 @@ from flask import Response
 import paramiko
 import mysql.connector
 
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler('logs/' + __name__ + '.log')
+formatter = logging.Formatter(
+    '%(asctime)s : %(levelname)s : %(name)s : %(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
     """Return a PCAP with SIP and RTP of call given CDR ID.
 
@@ -42,7 +52,7 @@ def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
 
     call_date = db_query_resp[0][0]
     call_id = db_query_resp[0][1]
-    print(f"Calldate: {call_date}, Call-ID: {call_id}")
+    logger.info(f"Calldate: {call_date}, Call-ID: {call_id}")
     
     sniffer_ip = "192.168.10.2"
     username = "root"
@@ -65,11 +75,11 @@ def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
     # DETERMINE IF RTP WAS FOUND FOR THIS CALL
     stdout_str = stdout.readlines()
     if len(stdout_str) != 0:
-        print("REMOTE COMMAND OUTPUT:")
+        logger.info("REMOTE COMMAND OUTPUT:")
         for each_line in stdout.readlines():
-            print(each_line)
+            logger.info(each_line)
     else:
-        print("No RTP for this CDR-ID!")
+        logger.info("No RTP for this CDR-ID!")
 
     # RETRIEVE THE SIP PCAP
     sftp_client = ssh_client.open_sftp()

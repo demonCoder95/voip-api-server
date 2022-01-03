@@ -10,8 +10,8 @@ import logging
 from scapy.utils import rdpcap
 
 # For testing the reader
-from codec_processor import G711UProcessor
-from rtp_parser import RTPParser
+from swagger_server.controllers.common.codec_processor import G711UProcessor
+from swagger_server.controllers.common.rtp_parser import RTPParser
 import wave
 
 # Create a module logger
@@ -47,7 +47,7 @@ class PCAPProcessor():
         for packet in packets:
             packet_list.append(bytes(packet))
 
-        logger.info(f"Finished reading {len(packet_list)}packets from {self.filename}")
+        logger.info(f"Finished reading {len(packet_list)} packets from {self.filename}")
         return packet_list
 
 def test_function():
