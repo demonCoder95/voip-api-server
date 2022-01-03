@@ -75,3 +75,6 @@ pcap/
 pyvenv.cfg
 bin/
 share/
+
+# Application logs 
+logs/
