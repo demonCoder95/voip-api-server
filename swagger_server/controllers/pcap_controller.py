@@ -3,15 +3,21 @@ from flask import Response
 import paramiko
 import mysql.connector
 
+from swagger_server.controllers.common.config_handler import ConfigHandler
+
 import logging
 
+# Setup logger for this module
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 file_handler = logging.FileHandler('logs/' + __name__ + '.log')
 formatter = logging.Formatter(
     '%(asctime)s : %(levelname)s : %(name)s : %(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
+
+# Setup the config handler for this module
+config_handler = ConfigHandler()
 
 def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
     """Return a PCAP with SIP and RTP of call given CDR ID.
@@ -25,12 +31,13 @@ def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
 
     :rtype: Object
     """
+    db_params = config_handler.get_params("database")
     # need to determine the call-id and calldate of the call, from the CDR DB
     db_conn = mysql.connector.connect(
-        user='monitor',
-        password='xflow',
-        host='172.30.219.1',
-        database='voipmonitor'
+        user=db_params["username"],
+        password=db_params["password"],
+        host=db_params["host"],
+        database=db_params["database"]
     )
     db_cur = db_conn.cursor()
     # The schema for Call Date and Call-ID
@@ -54,10 +61,12 @@ def pcap_get(cdr_id, disable_rtp=None):  # noqa: E501
     call_id = db_query_resp[0][1]
     logger.info(f"Calldate: {call_date}, Call-ID: {call_id}")
     
-    sniffer_ip = "192.168.10.2"
-    username = "root"
-    password = "xflow@123"
-    spool_dir = "/var/spool/voipmonitor"
+    # TODO: update the backend to process multiple sniffers
+    sniffer_params = config_handler.get_params("sniffers")[0]
+    sniffer_ip = sniffer_params["host"]
+    username = sniffer_params["username"]
+    password = sniffer_params["password"]
+    spool_dir = sniffer_params["spool_dir"]
 
     # FETCH THE PCAP FROM THE SNIFFER(S) USING THE CALLDATE INFORMATION
     # Day, Month, Hour and Minute need to be 0 filled 2 digit numbers

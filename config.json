@@ -1,0 +1,16 @@
+{
+    "database": {
+        "host": "172.30.219.1",
+        "username": "monitor",
+        "password": "xflow",
+        "database": "voipmonitor"
+    },
+    "sniffers": [
+        {
+            "host": "192.168.10.2",
+            "username": "root",
+            "password": "xflow@123",
+            "spool_dir": "/var/spool/voipmonitor"
+        }
+    ]
+}

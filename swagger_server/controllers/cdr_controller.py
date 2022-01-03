@@ -1,7 +1,8 @@
-from typing import List
-
 from swagger_server.models.cdr import CDR  # noqa: E501
 from swagger_server.models.cdr_list import CDRList
+from swagger_server.controllers.common.config_handler import ConfigHandler
+
+import logging
 
 #imports for the MySQL connector
 import mysql.connector
@@ -9,6 +10,19 @@ import mysql.connector
 # The CODEC lookup dictionary to convert Payload Type (PT) into
 # Payload name string.
 from swagger_server.controllers.common.rtp_parser import codec_lookup
+
+# Configuration handler for this module
+config_handler = ConfigHandler()
+
+# Logger setup for this module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+file_handler = logging.FileHandler('logs/' + __name__ + ".log")
+formatter = logging.Formatter(
+    '%(asctime)s : %(levelname)s : %(name)s : %(message)s'
+)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 
 # 'cdr' table schema to control the output formatting
@@ -97,13 +111,14 @@ def calls_cdr_id_get(cdr_id):  # noqa: E501
 
     :rtype: CDR
     """
+    # load database config parameters from the confighandler
+    db_params = config_handler.get_params("database")
     # initiate a database connection
-    # TODO: add connection parameters to config file
     db_conn = mysql.connector.connect(
-        user='monitor',
-        password='xflow',
-        host='172.30.219.1',
-        database='voipmonitor'
+        user=db_params["username"],
+        password=db_params["password"],
+        host=db_params["host"],
+        database=db_params["database"]
     )
 
     # Get the DB cursor
@@ -124,15 +139,15 @@ def calls_cdr_id_get(cdr_id):  # noqa: E501
     # database, therefore, fetchone() is used for all queries.
     db_cur.execute(db_query_cdr)
     resp_cdr = db_cur.fetchone()
-    print(resp_cdr)
+    logger.info(resp_cdr)
 
     db_cur.execute(db_query_cdr_next)
     resp_cdr_next = db_cur.fetchone()
-    print(resp_cdr_next)
+    logger.info(resp_cdr_next)
 
     db_cur.execute(db_query_cdr_next_1)
     resp_cdr_next_1 = db_cur.fetchone()
-    print(resp_cdr_next_1)
+    logger.info(resp_cdr_next_1)
 
     # all done, so close the cursor and connection with the database
     db_cur.close()
@@ -155,12 +170,12 @@ def calls_get(offset, size):
     return_cdr_list = CDRList()
 
     # initiate a database connection
-    # TODO: add connection parameters to config file
+    db_params = config_handler.get_params("database")
     db_conn = mysql.connector.connect(
-        user='monitor',
-        password='xflow',
-        host='172.30.219.1',
-        database='voipmonitor'
+        user=db_params["username"],
+        password=db_params["password"],
+        host=db_params["host"],
+        database=db_params["database"]
     )
 
     # Get the DB cursor
@@ -173,7 +188,7 @@ def calls_get(offset, size):
     
     db_cur.execute(db_query_cdr)
     resp_cdr = db_cur.fetchall()
-    print(resp_cdr)
+    logger.info(resp_cdr)
     # all done, so close the cursor and connection with the database
     db_cur.close()
     db_conn.close()

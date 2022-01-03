@@ -42,7 +42,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDRList'
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.cdr_controller
   /calls/{cdrId}:
     get:
       summary: Return a list of Call Data Records (CDRs).
@@ -67,7 +67,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDR'
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.cdr_controller
   /pcap:
     get:
       summary: Return a PCAP of a call
