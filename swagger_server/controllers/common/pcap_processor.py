@@ -76,8 +76,10 @@ class PCAPProcessor():
         head_packet = bytes(self.get_first_packet())
         rtp_header = self.rtp_parser.parse(head_packet, header_only=True)
         if rtp_header is not None and "payload_type" in rtp_header.keys():
+            logger.info(f"Payload type is {rtp_header['payload_type']}")
             return rtp_header["payload_type"]
         else:
+            logger.info(f"Couldn't determine payload type for {self.filename}!")
             return None
 
 

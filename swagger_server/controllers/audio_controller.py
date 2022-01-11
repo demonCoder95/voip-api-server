@@ -6,6 +6,17 @@ else:
     from common.codec_processor import CODECProcessor
     from common.pcap_processor import PCAPProcessor
 
+import logging
+# Logger setup for this module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+file_handler = logging.FileHandler('logs/' + __name__ + ".log")
+formatter = logging.Formatter(
+    '%(asctime)s : %(levelname)s : %(name)s : %(message)s'
+)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
 
 def audio_call_id_get(call_id):  # noqa: E501
     """Return the Audio file of a call identified with callId
@@ -38,20 +49,28 @@ def audio_cdr_id_get(cdr_id):  # noqa: E501
     # 3. Parse the PCAP to extract the RTP payload from it.    
     pcap_proc = PCAPProcessor(pcap_filename)
     rtp_payload = pcap_proc.get_all_payload()
+    logger.info("Got all payload from the PCAP.")
 
     # 4. Identify the Payload type
     payload_type = pcap_proc.get_payload_type()
+    if payload_type is not None:
+        logger.info("Got paylaod type!")
+    else:
+        logger.error("Couldn't get payload type!")
 
     # 5. Decode the encoded audio data and get the WAVeform file
     audio_filename = 'g722-only.wav'
     CODECProcessor(rtp_payload, payload_type, audio_filename).decode_payload()
+    logger.info("Finished decoding payload.")
 
     # 6. Read the audio file into a buffer
     audio_data = open(audio_filename, 'rb').read()
+    logger.info("Reading audio file to stream...")
 
     # 7. Return the response to the API call
     resp = Response(audio_data, '200', {
         'Content-Disposition': 'attachment;filename=test.wav;'
     })
+    logger.info("Returning response.")
     return resp
         
