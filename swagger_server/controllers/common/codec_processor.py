@@ -21,10 +21,12 @@ if __name__ != '__main__':
     from swagger_server.controllers.common.rtp_parser import codec_lookup
     from swagger_server.controllers.common.errors import UnsupportedPayload
     from swagger_server.controllers.common.codecs.g729.g729a import G729Adecoder
+    from swagger_server.controllers.common.codecs.g722.g722 import G722Decoder
 else:
     from rtp_parser import codec_lookup
     from errors import UnsupportedPayload
     from codecs.g729.g729a import G729Adecoder
+    from codecs.g722.g722 import G722Decoder
 
 # Create a module logger
 logger = logging.getLogger(__name__)
@@ -230,7 +232,16 @@ class G722CODEC(CODEC):
         pass
 
     def decode(self):
-        pass
+        # decoder object for G.722
+        decoder = G722Decoder()
+        # total output
+        output = bytes()
+        # size of each buffer, determined by the core clss itself
+        buff_len = decoder.input_size
+        # for each-buffer of length buff_len, decode the audio
+        for i in range(0, len(self.payload), buff_len):
+            output += decoder.decode(self.payload[i:i+buff_len])
+        return output
 
 class G729CODEC(CODEC):
     """CODEC implementation for ITU-T G.729a CODEC."""

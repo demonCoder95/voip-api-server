@@ -31,7 +31,7 @@ def audio_cdr_id_get(cdr_id):  # noqa: E501
     :rtype: object
     """
 
-    pcap_filename = 'g729a-only.pcap'
+    pcap_filename = 'g722-only.pcap'
     
     # TODO: Add PCAP fetching logic here for the module
  
@@ -43,7 +43,7 @@ def audio_cdr_id_get(cdr_id):  # noqa: E501
     payload_type = pcap_proc.get_payload_type()
 
     # 5. Decode the encoded audio data and get the WAVeform file
-    audio_filename = 'g729a-only.wav'
+    audio_filename = 'g722-only.wav'
     CODECProcessor(rtp_payload, payload_type, audio_filename).decode_payload()
 
     # 6. Read the audio file into a buffer
