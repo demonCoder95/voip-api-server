@@ -73,12 +73,12 @@ codec_spec = {
         "n_channels": 1,
         "sample_width": 8
     },
-    "G.722": {
+    "G722": {
         "sampling_rate": 16000,
         "n_channels": 1,
         "sample_width": 14
     },
-    "G.729": {
+    "G729": {
         "sampling_rate": 8000,
         "n_channels": 1,
         "sample_width": 16
