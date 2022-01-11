@@ -58,7 +58,9 @@ class PCAPProcessor():
     def get_first_packet(self):
         """Return the first packet from the PCAP file. This is used to
         determine Payload Type (PT) field of an RTP stream."""
-        return rdpcap(self.filename, 1)
+        # The rdpcap function returns a 'PacketList' object, even for a single
+        # packet, so need to subscript and return one object
+        return rdpcap(self.filename, 1)[0]
 
     def get_all_payload(self):
         logger.info(f"Extracting payload from {self.filename}")
