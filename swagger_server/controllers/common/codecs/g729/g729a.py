@@ -2,11 +2,12 @@ from typing import *
 import ctypes
 
 import os
-g729a_lib_path = ''
+# Added to conform with the project directory structure
+libpath_prefix = 'swagger_server/controllers/common/codecs/g729'
 if os.name == 'nt':
     g729a_lib_path = './libg729a.dll'
 elif os.name == 'posix':
-    g729a_lib_path = './libg729a.so'
+    g729a_lib_path = libpath_prefix + '/libg729a.so'
 else:
     raise RuntimeError("Unknown OS")
 
