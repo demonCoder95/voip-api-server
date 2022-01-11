@@ -8,7 +8,7 @@ from typing import *
 import ctypes
 import os
 
-g722_lib_path_prefix = 'swagger_server/controllers/common/codecs/g729'
+g722_lib_path_prefix = 'swagger_server/controllers/common/codecs/g722'
 
 if os.name == 'posix':
     g722_lib_path = g722_lib_path_prefix + "/libg722.so"
