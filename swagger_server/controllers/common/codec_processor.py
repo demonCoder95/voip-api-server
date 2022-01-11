@@ -76,7 +76,7 @@ codec_spec = {
         "sample_width": 8
     },
     "G722": {
-        "sampling_rate": 16000,
+        "sampling_rate": 8000,
         "n_channels": 1,
         "sample_width": 14
     },
@@ -105,6 +105,7 @@ class CODECProcessor():
                 f"{self.payload_type} is not a supported CODEC!" + 
                 "\nSupported CODECs are " + 
                 ",".join(supported_payloads))
+        logger.info("Finished initializing the CODEC processor!")
 
     def decode_payload(self):
         """This is the primary method of this class and serves as the blanket
@@ -128,8 +129,12 @@ class CODECProcessor():
         else:
             # a safety net to catch any anamolies
             raise UnsupportedPayload("Payload not supported!")
+        logger.info(
+            f"Decoded audio successfully for {self.payload_type} CODEC.")
+        
 
         # generate the WAVeform audio file from the raw audio
+        logger.info("Generating WAV audio file.")
         self.generate_wav(decoded_audio, self.filename, self.payload_type)
 
     def generate_wav(self, raw_audio, filename, payload_type):
