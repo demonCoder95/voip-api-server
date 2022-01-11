@@ -67,6 +67,7 @@ class G722Decoder(G722Coder):
             self.BUFFER_SIZE,
             self.BUFFER_SIZE * 2
         )
+        print("G722 Decoder constructor finished!")
 
 # if runs as a script
 if __name__ == '__main__':
