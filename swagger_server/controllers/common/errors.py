@@ -8,3 +8,7 @@ License: None
 # Exception to indicate invalid configuration parameter
 class InvalidConfigError(Exception):
     pass
+
+# Exception to indicate unsupported payload
+class UnsupportedPayload(Exception):
+    pass

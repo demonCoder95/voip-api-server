@@ -117,8 +117,8 @@ paths:
             minimum: 1
       responses:
         '200':
-          description: A call with was identified with the given CDR-ID and
-            the decoded payload of the call is being returned to the caller.
+          description: A call was identified with the given CDR-ID and
+            the decoded payload of the call is being returned as WAV audio.
           headers:
             Content-Disposition:
               description: The filename of the audio file that is being returned.
@@ -129,7 +129,33 @@ paths:
               schema:
                 type: object
                 format: binary
-
+  /audio/{callId}:
+    get:
+      summary: Return the Audio file of a call identified with callId
+      description: This API endpoint identifies a call with the given
+        callId and then provides the audio file of the decoded audio of
+        the VoIP call in WAV format.
+      parameters:
+        - name: callId
+          in: path
+          required: true
+          description: Call-ID of the call to identify it.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A call was identified with the given Call-ID and
+            the decoded payload of the call is being returned as WAV audio.
+          headers:
+            Content-Disposition:
+              description: The filename of the audio file that is being returned.
+              schema:
+                type: string
+          content:
+            audio/x-wav:
+              schema:
+                type: object
+                format: binary
 
 components:
   schemas:

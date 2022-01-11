@@ -41,6 +41,7 @@ class PCAPProcessor():
         """This class constructor"""
         # Name of the PCAP file that is to be read
         self.filename = filename
+        self.rtp_parser = RTPParser()
 
     def dump_all_packets(self):
         """Return all packet binary data in bytes format in a list."""
@@ -53,6 +54,31 @@ class PCAPProcessor():
 
         logger.info(f"Finished reading {len(packet_list)} packets from {self.filename}")
         return packet_list
+
+    def get_first_packet(self):
+        """Return the first packet from the PCAP file. This is used to
+        determine Payload Type (PT) field of an RTP stream."""
+        return rdpcap(self.filename, 1)
+
+    def get_all_payload(self):
+        logger.info(f"Extracting payload from {self.filename}")
+        packets = self.dump_all_packets()
+        total_payload = b''
+        for each_packet in packets:
+            total_payload += self.parser.parse(each_packet)
+        logger.info(f"Extracted {len(total_payload)} bytes of payload.")
+        return total_payload
+    
+    def get_payload_type(self):
+        logger.info(f"Determining payload type for {self.filename}")
+        head_packet = self.get_first_packet()
+        rtp_header = self.rtp_parser.parse(head_packet, header_only=True)
+        if rtp_header is not None and "payload_type" in rtp_header.keys():
+            return rtp_header["payload_type"]
+        else:
+            return None
+
+
 
 def test_function():
     p = PCAPProcessor('g729a-only.pcap')

@@ -1,14 +1,24 @@
 from flask import Response
 if __name__ != '__main__':
-    from swagger_server.controllers.common.codec_processor import G711UProcessor
+    from swagger_server.controllers.common.codec_processor import CODECProcessor
     from swagger_server.controllers.common.pcap_processor import PCAPProcessor
-    from swagger_server.controllers.common.rtp_parser import RTPParser
 else:
-    from common.codec_processor import G711UProcessor
+    from common.codec_processor import CODECProcessor
     from common.pcap_processor import PCAPProcessor
-    from common.rtp_parser import RTPParser
-    
-import wave
+
+
+def audio_call_id_get(call_id):  # noqa: E501
+    """Return the Audio file of a call identified with callId
+
+    This API endpoint identifies a call with the given callId and then provides the audio file of the decoded audio of the VoIP call in WAV format. # noqa: E501
+
+    :param call_id: Call-ID of the call to identify it.
+    :type call_id: str
+
+    :rtype: object
+    """
+    # Use the Call-ID to identify the PCAP to be fetched for the call
+
 
 def audio_cdr_id_get(cdr_id):  # noqa: E501
     """Return the Audio file of a call identified with cdrId
@@ -21,27 +31,25 @@ def audio_cdr_id_get(cdr_id):  # noqa: E501
     :rtype: object
     """
 
-    pcap_filename = 'sip-rtp-g729a.pcap'
+    pcap_filename = 'g729a-only.pcap'
     
     # TODO: Add PCAP fetching logic here for the module
-
+ 
+    # 3. Parse the PCAP to extract the RTP payload from it.    
     pcap_proc = PCAPProcessor(pcap_filename)
-    packet_list = pcap_proc.dump_all_packets()
+    rtp_payload = pcap_proc.get_all_payload()
 
-    # write the audio data in WAV object
-    with wave.open('test.wav', 'wb') as f:
-        f.setframerate(8000)
-        f.setnchannels(1)
-        f.setsampwidth(4)
-        total_payload = None
-        for each_packet in packet_list:    
-            parser = RTPParser(each_packet)
-            rtp_payload, rtp_header = parser.parse()
-            total_payload += rtp_payload
-        codec_proc = G711UProcessor(total_payload)
-        f.writeframesraw(codec_proc.decode())
+    # 4. Identify the Payload type
+    payload_type = pcap_proc.get_payload_type()
 
-    audio_data = open('test.wav', 'rb').read()
+    # 5. Decode the encoded audio data and get the WAVeform file
+    audio_filename = 'g729a-only.wav'
+    CODECProcessor(rtp_payload, payload_type, audio_filename).decode_payload()
+
+    # 6. Read the audio file into a buffer
+    audio_data = open(audio_filename, 'rb').read()
+
+    # 7. Return the response to the API call
     resp = Response(audio_data, '200', {
         'Content-Disposition': 'attachment;filename=test.wav;'
     })

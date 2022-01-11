@@ -100,20 +100,20 @@ class RTPParser():
     TODO: add support for receiving lists of packets (buffers) and then
     return the entire RTP paylaod as one unit.
     """
-    def __init__(self, packet_bytes):
+    def __init__(self):
         """The class constructor."""
-        self.packet_bytes = packet_bytes
+        pass
 
     # this method processes all headers and returns RTP payload
-    def parse(self):
+    def parse(self, packet_bytes, payload_only=True, header_only=False):
         """
         Core function of the class that parses all the layers and retrieves
-        the RTP payload of the bytes set in the object's "packet_bytes"
+        the RTP payload of the bytes set in the method's "packet_bytes"
         attribute.
         """
         logger.info("~*" * 5 + "NEW PACKET!" + "~*"*5 + "\n")
         # Parse the Ethernet Layer
-        payload, is_ip = self._check_eth_data(self.packet_bytes)
+        payload, is_ip = self._check_eth_data(packet_bytes)
         
         # only proceed with parsing if the packet is an IP packet
         if not is_ip:
@@ -141,7 +141,12 @@ class RTPParser():
         logger.debug(f"RTP Payload: {payload}")
         logger.info("~*"*5 + "END OF PACKET!" + "~*"*5 + "\n")
 
-        return payload, rtp_header
+        if header_only:
+            return rtp_header
+        elif payload_only:
+            return payload
+        else:
+            return payload, rtp_header
     
     # this method processes the Ethernet header from packet_bytes
     def _check_eth_data(self, data):

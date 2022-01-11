@@ -42,7 +42,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDRList'
-      x-openapi-router-controller: swagger_server.controllers.cdr_controller
+      x-openapi-router-controller: swagger_server.controllers.default_controller
   /calls/{cdrId}:
     get:
       summary: Return a list of Call Data Records (CDRs).
@@ -67,7 +67,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDR'
-      x-openapi-router-controller: swagger_server.controllers.cdr_controller
+      x-openapi-router-controller: swagger_server.controllers.default_controller
   /pcap:
     get:
       summary: Return a PCAP of a call
@@ -113,7 +113,7 @@ paths:
                 type: object
                 format: binary
                 x-content-type: application/octet-stream
-      x-openapi-router-controller: swagger_server.controllers.pcap_controller
+      x-openapi-router-controller: swagger_server.controllers.default_controller
   /audio/{cdrId}:
     get:
       summary: Return the Audio file of a call identified with cdrId
@@ -133,8 +133,8 @@ paths:
           format: int64
       responses:
         "200":
-          description: A call with was identified with the given CDR-ID and the decoded
-            payload of the call is being returned to the caller.
+          description: A call was identified with the given CDR-ID and the decoded
+            payload of the call is being returned as WAV audio.
           headers:
             Content-Disposition:
               description: The filename of the audio file that is being returned.
@@ -148,7 +148,40 @@ paths:
                 type: object
                 format: binary
                 x-content-type: audio/x-wav
-      x-openapi-router-controller: swagger_server.controllers.audio_controller
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /audio/{callId}:
+    get:
+      summary: Return the Audio file of a call identified with callId
+      description: This API endpoint identifies a call with the given callId and then
+        provides the audio file of the decoded audio of the VoIP call in WAV format.
+      operationId: audio_call_id_get
+      parameters:
+      - name: callId
+        in: path
+        description: Call-ID of the call to identify it.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A call was identified with the given Call-ID and the decoded
+            payload of the call is being returned as WAV audio.
+          headers:
+            Content-Disposition:
+              description: The filename of the audio file that is being returned.
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            audio/x-wav:
+              schema:
+                type: object
+                format: binary
+                x-content-type: audio/x-wav
+      x-openapi-router-controller: swagger_server.controllers.default_controller
 components:
   schemas:
     CDRList:
