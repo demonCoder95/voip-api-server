@@ -65,7 +65,7 @@ class PCAPProcessor():
         packets = self.dump_all_packets()
         total_payload = b''
         for each_packet in packets:
-            total_payload += self.parser.parse(each_packet)
+            total_payload += self.rtp_parser.parse(each_packet)
         logger.info(f"Extracted {len(total_payload)} bytes of payload.")
         return total_payload
     
