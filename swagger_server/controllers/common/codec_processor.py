@@ -4,7 +4,6 @@ for VoIP audio.
 Author: Noor
 Date: December 28, 2021
 License: None"""
-import g711
 
 # for the logging plumbing
 import logging
@@ -174,10 +173,11 @@ class PCMUCODEC(CODEC):
 
     def decode(self):
         # decode the encoded u-Law bytes
-        logger.debug(f'Received {len(self.payload)} bytes of G.711 u-Law payload!')
-        decoded_bytes = g711.decode_ulaw(self.payload)
-        logger.debug(f'Decoded {len(decoded_bytes)} bytes of G.711 u-Law payload!')
-        return decoded_bytes
+        # logger.debug(f'Received {len(self.payload)} bytes of G.711 u-Law payload!')
+        # decoded_bytes = g711.decode_ulaw(self.payload)
+        # logger.debug(f'Decoded {len(decoded_bytes)} bytes of G.711 u-Law payload!')
+        # return decoded_bytes
+        pass
     
     # Written to satisfy the abstract class "CODEC". Not implemented yet.
     def encode(self):
@@ -207,10 +207,11 @@ class PCMACODEC(CODEC):
 
     def decode(self):
         # decode the encoded a-Law bytes
-        logger.debug(f'Received {len(self.payload)} bytes of G.711 a-Law payload!')
-        decoded_bytes = g711.decode_alaw(self.payload)
-        logger.debug(f'Decoded {len(decoded_bytes)} bytes of G.711 a-Law payload!')
-        return decoded_bytes
+        # logger.debug(f'Received {len(self.payload)} bytes of G.711 a-Law payload!')
+        # decoded_bytes = g711.decode_alaw(self.payload)
+        # logger.debug(f'Decoded {len(decoded_bytes)} bytes of G.711 a-Law payload!')
+        # return decoded_bytes
+        pass
 
     # Written to satisfy the abstract class "CODEC". Not implemented yet.
     def encode(self):
