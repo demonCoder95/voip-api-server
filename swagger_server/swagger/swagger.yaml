@@ -42,7 +42,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDRList'
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.cdr_controller
   /calls/{cdrId}:
     get:
       summary: Return a list of Call Data Records (CDRs).
@@ -67,7 +67,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CDR'
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.cdr_controller
   /pcap:
     get:
       summary: Return a PCAP of a call
@@ -113,7 +113,7 @@ paths:
                 type: object
                 format: binary
                 x-content-type: application/octet-stream
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.pcap_controller
   /audio/{cdrId}:
     get:
       summary: Return the Audio file of a call identified with cdrId
@@ -148,7 +148,7 @@ paths:
                 type: object
                 format: binary
                 x-content-type: audio/x-wav
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.audio_controller
   /audio/{callId}:
     get:
       summary: Return the Audio file of a call identified with callId
@@ -181,7 +181,7 @@ paths:
                 type: object
                 format: binary
                 x-content-type: audio/x-wav
-      x-openapi-router-controller: swagger_server.controllers.default_controller
+      x-openapi-router-controller: swagger_server.controllers.audio_controller
 components:
   schemas:
     CDRList:
