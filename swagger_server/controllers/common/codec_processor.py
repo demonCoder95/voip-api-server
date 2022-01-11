@@ -241,8 +241,20 @@ class G729CODEC(CODEC):
         pass
 
     def decode(self):
+        # decoder object for G729.a
         decoder = G729Adecoder()
-        return decoder.process(bytearray(self.payload))
+
+        # total output
+        output = bytes()
+
+        # size of each buffer, determined by the core class itself
+        buff_len = decoder.inputSize
+
+        # for each_buffer of length buff_len, decode the audio
+        for i in range(0, len(self.payload),buff_len ):
+            # decode the payload in buffers
+            output += decoder.process(self.payload[i:i+buff_len])
+        return output
 
 class AMRCODEC(CODEC):
     """CODEC implementation for ITU-T G.722.1 CODEC."""
