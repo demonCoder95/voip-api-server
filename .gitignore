@@ -78,3 +78,7 @@ share/
 
 # Application logs 
 logs/
+
+# binary data and output files for the CODEC testing
+*.data
+*.output

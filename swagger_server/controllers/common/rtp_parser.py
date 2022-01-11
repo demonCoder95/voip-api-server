@@ -245,6 +245,10 @@ class RTPParser():
 
     # this method processes the RTP header - RFC 3350
     def _check_rtp_data(self, data, rtp_header):
+        # TODO: add better SIP/RTP parsing here to handle identification
+        # Check if RTP data is available
+        if len(data) < 12:
+            return bytes(0), rtp_header
         rtp_hdr = struct.unpack('!BBHII', data[:12])
         # The RTP header works as follows:
 

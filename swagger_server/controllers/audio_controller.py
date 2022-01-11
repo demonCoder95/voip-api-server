@@ -1,7 +1,13 @@
 from flask import Response
-from swagger_server.controllers.common.codec_processor import G711UProcessor
-from swagger_server.controllers.common.pcap_processor import PCAPProcessor
-from swagger_server.controllers.common.rtp_parser import RTPParser
+if __name__ != '__main__':
+    from swagger_server.controllers.common.codec_processor import G711UProcessor
+    from swagger_server.controllers.common.pcap_processor import PCAPProcessor
+    from swagger_server.controllers.common.rtp_parser import RTPParser
+else:
+    from common.codec_processor import G711UProcessor
+    from common.pcap_processor import PCAPProcessor
+    from common.rtp_parser import RTPParser
+    
 import wave
 
 def audio_cdr_id_get(cdr_id):  # noqa: E501
@@ -14,9 +20,8 @@ def audio_cdr_id_get(cdr_id):  # noqa: E501
 
     :rtype: object
     """
-    pass
 
-    pcap_filename = 'ulaw-only.pcap'
+    pcap_filename = 'sip-rtp-g729a.pcap'
     
     # TODO: Add PCAP fetching logic here for the module
 
@@ -28,11 +33,13 @@ def audio_cdr_id_get(cdr_id):  # noqa: E501
         f.setframerate(8000)
         f.setnchannels(1)
         f.setsampwidth(4)
+        total_payload = None
         for each_packet in packet_list:    
             parser = RTPParser(each_packet)
             rtp_payload, rtp_header = parser.parse()
-            codec_proc = G711UProcessor(rtp_payload)
-            f.writeframesraw(codec_proc.decode())
+            total_payload += rtp_payload
+        codec_proc = G711UProcessor(total_payload)
+        f.writeframesraw(codec_proc.decode())
 
     audio_data = open('test.wav', 'rb').read()
     resp = Response(audio_data, '200', {

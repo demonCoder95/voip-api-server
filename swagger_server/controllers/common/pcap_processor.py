@@ -8,10 +8,14 @@ License: None
 """
 import logging
 from scapy.utils import rdpcap
+from math import floor
 
 # For testing the reader
-from swagger_server.controllers.common.codec_processor import G711UProcessor
-from swagger_server.controllers.common.rtp_parser import RTPParser
+if __name__ != '__main__':
+    from swagger_server.controllers.common.rtp_parser import RTPParser
+else:
+    from rtp_parser import RTPParser
+
 import wave
 
 # Create a module logger
@@ -51,19 +55,18 @@ class PCAPProcessor():
         return packet_list
 
 def test_function():
-    p = PCAPProcessor('ulaw-only.pcap')
+    p = PCAPProcessor('g729a-only.pcap')
     packets = p.dump_all_packets()
 
-    # write the audio data in WAV object
-    with wave.open('test.wav', 'wb') as f:
-        f.setframerate(8000)
-        f.setnchannels(1)
-        f.setsampwidth(4)
+    with open('g729a.data', 'wb') as f:
+        total_payload = b''
         for each_packet in packets:    
             parser = RTPParser(each_packet)
             rtp_payload, rtp_header = parser.parse()
-            codec_proc = G711UProcessor(rtp_payload)
-            f.writeframesraw(codec_proc.decode())
+            total_payload += rtp_payload
+
+        f.write(total_payload)
+        
 
     logger.info(f"Finished writing audio for {len(packets)} packets!")
 
