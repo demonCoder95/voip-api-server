@@ -112,6 +112,7 @@ class CODECProcessor():
         method to put all pieces together."""
         # instantiate the appropriate CODEC object
         decoded_audio = None
+        logger.info("Decoding payload.")
         if self.payload_type == "PCMU":
             decoded_audio = PCMUCODEC(self.payload).decode()
         elif self.payload_type == "G723":
@@ -232,6 +233,7 @@ class G722CODEC(CODEC):
     """CODEC implementation for ITU-T G.722 CODEC."""
     def __init__(self, payload):
         self.payload = payload
+        logging.info("Initialized G722 CODEC processor!")
 
     def encode(self):
         pass
@@ -239,6 +241,7 @@ class G722CODEC(CODEC):
     def decode(self):
         # decoder object for G.722
         decoder = G722Decoder()
+        logging.info("Initialized G722 Decoder!")
         # total output
         output = bytes()
         # size of each buffer, determined by the core clss itself
