@@ -143,7 +143,7 @@ class CODECProcessor():
             f.setnchannels(specs["n_channels"])
             # Need to convert bits to bytes, with upper integer value
             # to minimize data loss.
-            f.setsamplewidth(ceil(specs["sample_width"]/8.0))
+            f.setsampwidth(ceil(specs["sample_width"]/8.0))
             f.writeframesraw(raw_audio)        
 
 class CODEC(metaclass=abc.ABCMeta):
