@@ -93,13 +93,14 @@ class CODECProcessor():
     """
     def __init__(self, rtp_payload, payload_type, filename):
         self.payload = rtp_payload
-        self.payload_type = payload_type
+        # convert the PT field value into str
+        self.payload_type = codec_lookup[payload_type]
         self.filename = filename
 
         # check for payload support in the constructor
-        if codec_lookup[payload_type] not in supported_payloads:
+        if self.payload_type not in supported_payloads:
             raise UnsupportedPayload(
-                f"{codec_lookup[payload_type]} is not a supported CODEC!" + 
+                f"{self.payload_type} is not a supported CODEC!" + 
                 "\nSupported CODECs are " + 
                 ",".join(supported_payloads))
 
@@ -122,6 +123,9 @@ class CODECProcessor():
             decoded_audio = AMRCODEC(self.payload).decode()
         elif self.payload_type == "AMR-WB":
             decoded_audio = AMRWBCODEC(self.payload).decode()
+        else:
+            # a safety net to catch any anamolies
+            raise UnsupportedPayload("Payload not supported!")
 
         # generate the WAVeform audio file from the raw audio
         self.generate_wav(decoded_audio, self.filename, self.payload_type)
