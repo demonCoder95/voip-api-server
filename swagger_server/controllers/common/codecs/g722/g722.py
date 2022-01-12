@@ -28,6 +28,7 @@ class G722Coder:
 
         # use the initializer to get a new decoder
         self.decoder = f_g722DecoderNew(64000, 1)
+        print("Created decoder object successfully.")
         if self.decoder == None:
             raise RuntimeError("G722 decoder function " + 
             f_g722DecoderNew.__name__ + " returned error!")
