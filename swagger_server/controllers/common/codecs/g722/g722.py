@@ -50,11 +50,12 @@ class G722Coder:
         input_data = (ctypes.c_byte * len(input))(*input)
         input_data_size = ctypes.sizeof(input_data)
         output_data = (ctypes.c_byte * self.output_size)()
-
+        print("type castings all done!")
         # call the library function to decode
         self._f_g722Decode(self.decoder,
             input_data, input_data_size,
             output_data)
+        print("decoder running finished!")
 
         return bytearray(output_data)
 
