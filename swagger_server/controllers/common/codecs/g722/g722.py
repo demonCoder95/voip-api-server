@@ -26,6 +26,7 @@ class G722Coder:
         output_size: int
     ) -> None:
 
+        print("Going to create a decoder object")
         # use the initializer to get a new decoder
         self.decoder = f_g722DecoderNew(64000, 1)
         print("Created decoder object successfully.")
